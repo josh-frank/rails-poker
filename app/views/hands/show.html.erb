@@ -1,0 +1,33 @@
+<%= stylesheet_link_tag "hand_style" %>
+<table>
+    <tr><td colspan="9" align="center"><%= @this_hand.value_name %></td></tr>
+    <tr>
+        <% @this_hand.size.times do | card_index | %>
+            <% if @this_hand.hold_array.include?( @this_hand.cards_array[ card_index ] ) %>
+                <td style="background-color: rgba(0, 0, 0, 0.5);">
+            <% else %>
+                <td>
+            <% end %>
+                <%= image_tag( "/images/cards/#{ @this_hand.cards_array[ card_index ].to_s.rjust( 2, "0" ) }.svg", height: '150' ) %><br />
+                <%= Hand.card_names[ @this_hand.cards_array[ card_index ] ] %>
+                <% if !@this_hand.drawn || @this_hand.drawn == 0 %>
+                    <br /><br /><%= button_to @this_hand.hold_array.include?( @this_hand.cards_array[ card_index ] ) ? "Discard" : "Hold", "#{ @this_hand.id }/hold", params: { hold_card: card_index }, method: "patch" %>
+                <% end %>
+            </td>
+            <td></td>
+        <% end %>
+    </tr>
+    <tr>
+        <td colspan="9" align="center">
+            <% if !@this_hand.drawn || @this_hand.drawn == 0 %>
+                <%= button_to "Draw", "#{ @this_hand.id }/draw", method: "patch" %>
+            <% else %>
+                <%= button_to "Deal new hand", deal_path %>
+            <% end %>
+        </td>
+    </tr>
+</table>
+
+<!--
+<b><%= @this_hand.hold_array == @this_hand.best_hold ? "CORRECT!" : "INCORRECT" %></b>
+-->
